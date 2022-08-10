@@ -7,9 +7,33 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Set;
 
-@Getter @Setter
+/**
+ * Method Getter implemented by Lombok lib for get access the private attributes of the Section Class
+ */
+@Getter
+
+/**
+ * Method Setter implemented by Lombok lib for set access the private attributes of the Section Class
+ */
+@Setter
+
+/**
+ * The @Entity annotation marks the Section Class as an entity bean,
+ * so it must have a no-argument constructor that is visible at least with a protected scope.
+ */
 @Entity
+
+/**
+ * The @Table annotation is used to specify table details that will be used to persist our entities in the database.
+ */
 @Table(name = "section")
+
+/**
+ * Class created for modeling the Section entity on the database
+ * @author Diovana Valim
+ * @version 0.0.1
+ * @see java.lang.Object
+ */
 public class Section {
 
     @Id
