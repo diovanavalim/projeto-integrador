@@ -14,5 +14,11 @@ import java.util.List;
  */
 @Repository
 public interface IProductRepository extends CrudRepository<Product, Long> {
+
+    /**
+     * Method for to find a product by type
+     * @param type String
+     * @return an object of type Product filtered by type
+     */
     List<Product> findAllByType(String type);
 }

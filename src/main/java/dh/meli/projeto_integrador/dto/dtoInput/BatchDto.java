@@ -1,5 +1,6 @@
 package dh.meli.projeto_integrador.dto.dtoInput;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dh.meli.projeto_integrador.model.Batch;
 import lombok.*;
 
@@ -35,7 +36,7 @@ import java.time.LocalTime;
  * @see java.lang.Object
  */
 public class BatchDto {
-
+    @JsonProperty("batchNumber")
     private long batchId;
 
     @NotNull(message = "You should define product id.")

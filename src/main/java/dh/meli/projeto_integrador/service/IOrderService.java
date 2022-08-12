@@ -11,5 +11,11 @@ import java.util.List;
  * @version 0.0.1
  */
 public interface IOrderService {
+
+    /**
+     * Method for to create an OrderEntry
+     * @param orderEntryDto an object of type OrderEntryDto coming from user request
+     * @return a list of objects of type BatchDto
+     */
     List<BatchDto> createInboundOrder(OrderEntryDto orderEntryDto);
 }

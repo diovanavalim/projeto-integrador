@@ -1,9 +1,6 @@
 package dh.meli.projeto_integrador.handler;
 
-import dh.meli.projeto_integrador.exception.ExceptionDetails;
-import dh.meli.projeto_integrador.exception.ForbiddenException;
-import dh.meli.projeto_integrador.exception.InternalServerErrorException;
-import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
+import dh.meli.projeto_integrador.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -69,5 +66,21 @@ public class ErrorHandler {
                 .build(),
                 HttpStatus.NOT_FOUND);
     }
-    
+
+    /**
+     * Method that captures a InvalidParameterTypeException and build a response to send through HTTP request.
+     * @param e instance of InvalidParameterTypeException class captured during the code execution flow.
+     * @return a ResponseEntity containing details of the exception and a compatible HTTP status code.
+     */
+    @ExceptionHandler(InvalidParameterTypeException.class)
+    public ResponseEntity<ExceptionDetails> invalidParameterTypeExceptionHandler(InvalidParameterTypeException e) {
+        return new ResponseEntity<ExceptionDetails>(ExceptionDetails
+                .builder()
+                .title("Invalid Parameter Type")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(e.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build(),
+                HttpStatus.BAD_REQUEST);
+    }
 }

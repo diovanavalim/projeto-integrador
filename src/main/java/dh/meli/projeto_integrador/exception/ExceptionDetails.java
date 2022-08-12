@@ -6,6 +6,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
+/**
+ * Method builder implemented by Lombok lib
+ */
 @Builder
 /**
  * Class to customize the return of errors response.

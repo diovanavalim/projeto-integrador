@@ -6,10 +6,7 @@ import dh.meli.projeto_integrador.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +19,9 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class OrderController {
 
+    /**
+     * Dependency Injection of the OrderService.
+     */
     @Autowired
     private OrderService orderService;
 
@@ -35,5 +35,18 @@ public class OrderController {
         List<BatchDto> batchDtoList = orderService.createInboundOrder(orderEntryDto);
 
         return new ResponseEntity<List<BatchDto>>(batchDtoList, HttpStatus.CREATED);
+    }
+
+    /**
+     * A put method responsible for updating a product batch at application database's;
+     * @param orderEntryDto a valid OrderEntryDto instance received by the request body;
+     * @param id long id received by endpoint variable
+     * @return Response Entity of type BatchDto and the corresponding HttpStatus;
+     */
+    @PutMapping("/fresh-products/inboundorder/{id}")
+    public ResponseEntity<BatchDto> updateInboundOrder(@RequestBody OrderEntryDto orderEntryDto, @PathVariable Long id) {
+        BatchDto batch = orderService.updateInboundOrder(orderEntryDto, id);
+
+        return new ResponseEntity<BatchDto>(batch, HttpStatus.OK);
     }
 }

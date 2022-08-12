@@ -40,7 +40,7 @@ public class AgentServiceTest {
 
     @Test
     void findAgentTest() {
-        Agent agent = agentService.findAgent(0);
+        Agent agent = agentService.findAgent(1);
 
         assertThat(agent.getId()).isEqualTo(Generators.getAgent().getId());
         assertThat(agent.getName()).isEqualTo(Generators.getAgent().getName());

@@ -1,6 +1,14 @@
 package dh.meli.projeto_integrador.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -47,7 +55,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("product")
     private Set<Batch> batches;
 
@@ -61,6 +69,6 @@ public class Product {
     private double price;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product")
+    @JsonManagedReference
     private Set<ProductCart> productCarts;
 }

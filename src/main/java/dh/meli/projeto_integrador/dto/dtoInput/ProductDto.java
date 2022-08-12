@@ -1,6 +1,7 @@
 package dh.meli.projeto_integrador.dto.dtoInput;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +20,13 @@ import javax.validation.constraints.NotNull;
  * Method Constructor with all arguments implemented by Lombok lib
  */
 @AllArgsConstructor
+
 /**
- * Class used to create a Data Transfer Object for ProductDto POJO
+ * Method builder implemented by Lombok lib
+ */
+@Builder
+/**
+ * Class used to create a Data Transfer Object for Product POJO
  * @author Gabriela Azevedo
  * @version 0.0.1
  * @see java.lang.Object
