@@ -1,8 +1,8 @@
 package dh.meli.projeto_integrador.service;
 
-import dh.meli.projeto_integrador.dto.dtoInput.SectionDto;
 import dh.meli.projeto_integrador.dto.dtoInput.WarehouseInputDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.AgentDto;
+import dh.meli.projeto_integrador.dto.dtoOutput.SectionDtoOutput;
 import dh.meli.projeto_integrador.model.Warehouse;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public interface IWarehouseService {
      * @param warehouse of type Warehouse
      * @return a List of type SectionDto
      */
-    List<SectionDto> setWarehouseSections(Warehouse warehouse);
+    List<SectionDtoOutput> setWarehouseSections(Warehouse warehouse);
 
     /**
      * Method to get warehouse's Agents into AgentDto

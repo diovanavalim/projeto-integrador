@@ -3,6 +3,7 @@ package dh.meli.projeto_integrador.service;
 import dh.meli.projeto_integrador.dto.dtoInput.SectionDto;
 import dh.meli.projeto_integrador.dto.dtoInput.WarehouseInputDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.AgentDto;
+import dh.meli.projeto_integrador.dto.dtoOutput.SectionDtoOutput;
 import dh.meli.projeto_integrador.exception.InternalServerErrorException;
 import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
 import dh.meli.projeto_integrador.model.Warehouse;
@@ -90,12 +91,12 @@ public class WarehouseService implements IWarehouseService {
      * @return a List of type SectionDto
      */
     @Override
-    public List<SectionDto> setWarehouseSections(Warehouse warehouse) {
-        List<SectionDto> sectionDtoList = new ArrayList<SectionDto>();
+    public List<SectionDtoOutput> setWarehouseSections(Warehouse warehouse) {
+        List<SectionDtoOutput> sectionDtoList = new ArrayList<SectionDtoOutput>();
 
         if (warehouse.getSections() != null) {
             warehouse.getSections().forEach(section -> {
-                sectionDtoList.add(new SectionDto(section));
+                sectionDtoList.add(new SectionDtoOutput(section));
             });
         }
 
