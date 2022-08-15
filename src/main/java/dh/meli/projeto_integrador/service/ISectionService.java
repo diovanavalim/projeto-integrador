@@ -1,6 +1,9 @@
 package dh.meli.projeto_integrador.service;
 
+import dh.meli.projeto_integrador.dto.dtoInput.CreateSectionDto;
 import dh.meli.projeto_integrador.model.Section;
+
+import java.util.List;
 
 /**
  * Interface to specify service methods implemented on SectionService class.
@@ -13,5 +16,25 @@ public interface ISectionService {
      * @param id long
      * @return an object of type Section
      */
-    Section findSection(long id);
+    Section getSectionById(long id);
+
+    /**
+     * Method to save a new section;
+     * @param section of type Section. Section instance;
+     * @return an object of type Section;
+     */
+    Section saveSection(Section section);
+
+    /**
+     * Method that given a CreateSectionDto objects call saveSection function to save a new Section entry;
+     * @param sectionDto of type SectionDto. SectionDto instance;
+     * @return an object of type Section;
+     */
+    Section createSection(CreateSectionDto sectionDto);
+
+    /**
+     * Method to get all sections stored in application's database;
+     * @return a List of type Section;
+     */
+    List<Section> getSections();
 }
