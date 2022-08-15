@@ -41,9 +41,9 @@ public class SectionServiceTest {
     }
 
     @Test
-    void findSectionTest() {
+    void getSectionByIdTest() {
         long id = 0;
-        Section section = sectionService.findSection(id);
+        Section section = sectionService.getSectionById(id);
 
         assertThat(section.getId()).isEqualTo(Generators.getSection().getId());
         assertThat(section.getWarehouse().getId()).isEqualTo(Generators.getSection().getWarehouse().getId());
@@ -53,14 +53,14 @@ public class SectionServiceTest {
     }
 
     @Test
-    void findSection_WhenSectionDontExistsTest() throws Exception {
+    void getSectionById_WhenSectionDontExistsTest() throws Exception {
         BDDMockito.when(sectionRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
         long id = 0;
 
         ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            Section section = sectionService.findSection(id);
+            Section section = sectionService.getSectionById(id);
         });
 
         assertThat(exception.getMessage()).isEqualTo(String.format("Could not find valid section for id %d", id));

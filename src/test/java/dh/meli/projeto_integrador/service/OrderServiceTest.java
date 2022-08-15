@@ -59,7 +59,7 @@ public class OrderServiceTest {
                 .thenReturn(Generators.getProduct());
         BDDMockito.when(warehouseService.findWarehouse(ArgumentMatchers.anyLong()))
                 .thenReturn(Generators.getWarehouse());
-        BDDMockito.when(sectionService.findSection(ArgumentMatchers.anyLong()))
+        BDDMockito.when(sectionService.getSectionById(ArgumentMatchers.anyLong()))
                 .thenReturn(Generators.getSection());
         BDDMockito.when(sectionService.saveSection(ArgumentMatchers.any(Section.class)))
                 .thenReturn(Generators.getSection());
@@ -83,7 +83,7 @@ public class OrderServiceTest {
         assertThat(batches.get(0).getProductId()).isEqualTo(generatedBatches.get(0).getProduct().getId());
 
         verify(warehouseService, atLeastOnce()).findWarehouse(orderEntryDto.getSection().getWarehouseId());
-        verify(sectionService, atLeastOnce()).findSection(orderEntryDto.getSection().getSectionId());
+        verify(sectionService, atLeastOnce()).getSectionById(orderEntryDto.getSection().getSectionId());
         verify(agentService, atLeastOnce()).findAgent(orderEntryDto.getAgentId());
     }
 
@@ -107,7 +107,7 @@ public class OrderServiceTest {
                 "maximum product load"));
 
         verify(warehouseService, atLeastOnce()).findWarehouse(orderEntryDto.getSection().getWarehouseId());
-        verify(sectionService, atLeastOnce()).findSection(orderEntryDto.getSection().getSectionId());
+        verify(sectionService, atLeastOnce()).getSectionById(orderEntryDto.getSection().getSectionId());
         verify(agentService, atLeastOnce()).findAgent(orderEntryDto.getAgentId());
     }
 
@@ -115,7 +115,7 @@ public class OrderServiceTest {
     void createInboundOrder_WrongProductSession() throws Exception {
         OrderEntryDto orderEntryDto = Generators.createOrderEntryDto();
 
-        BDDMockito.when(sectionService.findSection(ArgumentMatchers.anyLong()))
+        BDDMockito.when(sectionService.getSectionById(ArgumentMatchers.anyLong()))
                 .thenReturn(Generators.getUnavailableSection());
 
         ForbiddenException exception = Assertions.assertThrows(ForbiddenException.class, () -> {
@@ -125,7 +125,7 @@ public class OrderServiceTest {
         assertThat(exception.getMessage()).isEqualTo("Product's Maçã section does not equals the given section");
 
         verify(warehouseService, atLeastOnce()).findWarehouse(orderEntryDto.getSection().getWarehouseId());
-        verify(sectionService, atLeastOnce()).findSection(orderEntryDto.getSection().getSectionId());
+        verify(sectionService, atLeastOnce()).getSectionById(orderEntryDto.getSection().getSectionId());
         verify(agentService, atLeastOnce()).findAgent(orderEntryDto.getAgentId());
     }
 
@@ -143,7 +143,7 @@ public class OrderServiceTest {
         assertThat(exception.getMessage()).isEqualTo("Agent's warehouse ID does not belong to section's warehouse ID");
 
         verify(warehouseService, atLeastOnce()).findWarehouse(orderEntryDto.getSection().getWarehouseId());
-        verify(sectionService, atLeastOnce()).findSection(orderEntryDto.getSection().getSectionId());
+        verify(sectionService, atLeastOnce()).getSectionById(orderEntryDto.getSection().getSectionId());
         verify(agentService, atLeastOnce()).findAgent(orderEntryDto.getAgentId());
     }
 
@@ -229,7 +229,7 @@ public class OrderServiceTest {
         assertThat(batch.getProductId()).isEqualTo(batch2.getProduct().getId());
 
         verify(warehouseService, atLeastOnce()).findWarehouse(ArgumentMatchers.anyLong());
-        verify(sectionService, atLeastOnce()).findSection(ArgumentMatchers.anyLong());
+        verify(sectionService, atLeastOnce()).getSectionById(ArgumentMatchers.anyLong());
         verify(agentService, atLeastOnce()).findAgent(ArgumentMatchers.anyLong());
     }
 }

@@ -72,7 +72,7 @@ public class OrderService implements IOrderService {
     public List<BatchDto> createInboundOrder(OrderEntryDto orderEntryDto) {
         Warehouse warehouse = warehouseService.findWarehouse(orderEntryDto.getSection().getWarehouseId());
 
-        Section section = sectionService.findSection(orderEntryDto.getSection().getSectionId());
+        Section section = sectionService.getSectionById(orderEntryDto.getSection().getSectionId());
 
         Agent agent = agentService.findAgent(orderEntryDto.getAgentId());
 
