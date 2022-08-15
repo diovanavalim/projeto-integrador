@@ -10,7 +10,7 @@ import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class SectionControllerClass {
+public class SectionControllerTest {
 
     @InjectMocks
     SectionController sectionController;
