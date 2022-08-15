@@ -1,5 +1,6 @@
 package dh.meli.projeto_integrador.dto.dtoInput;
 
+import dh.meli.projeto_integrador.model.Section;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -37,4 +38,9 @@ public class SectionDto {
 
     @NotNull(message = "You shall define a warehouse ID")
     private long warehouseId;
+
+    public SectionDto(Section section) {
+        this.sectionId = section.getId();
+        this.warehouseId = section.getWarehouse().getId();
+    }
 }
