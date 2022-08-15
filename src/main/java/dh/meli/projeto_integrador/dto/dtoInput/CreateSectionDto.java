@@ -29,7 +29,7 @@ import javax.validation.constraints.Pattern;
 /**
  * Class used to create a Data Transfer Object for CreateSection POJO
  * @author Diovana Valim
- * @version 0.0.2
+ * @version 0.0.3
  * @see java.lang.Object
  */
 public class CreateSectionDto {

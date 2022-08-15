@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Class used to create a Data Transfer Object for Warehouse Input POJO
  * @author Diovana Valim
- * @version 0.0.2
+ * @version 0.0.3
  * @see java.lang.Object
  */
 public class WarehouseInputDto {
