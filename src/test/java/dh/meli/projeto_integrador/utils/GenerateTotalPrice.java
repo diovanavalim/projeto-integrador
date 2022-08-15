@@ -6,7 +6,7 @@ public class GenerateTotalPrice {
 
     public static TotalPriceDto newTotalPrice() {
         return TotalPriceDto.builder()
-                .totalPrice(4.99)
+                .totalPrice(50.0)
                 .build();
     }
 }

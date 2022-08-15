@@ -2,6 +2,7 @@ package dh.meli.projeto_integrador.service;
 
 import dh.meli.projeto_integrador.dto.dtoInput.CartDto;
 
+import dh.meli.projeto_integrador.dto.dtoInput.ProductDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.CartOutputDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.UpdateStatusDto;
 
@@ -67,7 +68,8 @@ class CartServiceTest {
         Cart newCartWithId = GenerateCart.newCartWithId1();
         Customer newCustomer = GenerateCustomer.newCustomer1();
         Product newProduct = GenerateProduct.newProduct1();
-        Batch newBatch = GenerateBatch.newBatch1();
+//        Batch newBatch = GenerateBatch.newBatch1();
+        ProductDto newProductDto = GenerateProduct.newProductDto();
         CartDto newCartDto = GenerateCart.newCartDto1();
         ProductCart newProductCart = GenerateProductCart.newProductCart1();
 
@@ -77,15 +79,15 @@ class CartServiceTest {
                 .thenReturn(newCartWithId);
         BDDMockito.when(productRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(newProduct));
-        BDDMockito.when(batchRepository.findByProduct(ArgumentMatchers.any(Product.class)))
-                .thenReturn(newBatch);
+        BDDMockito.when(batchRepository.findTotalQuantityByProductId(ArgumentMatchers.anyLong()))
+                .thenReturn(20);
         BDDMockito.when(productCartRepository.save(ArgumentMatchers.any(ProductCart.class)))
                 .thenReturn(newProductCart);
 
 
         TotalPriceDto result = cartService.createCart(newCartDto);
 
-        assertThat(result.getTotalPrice()).isEqualTo(newProduct.getPrice());
+        assertThat(result.getTotalPrice()).isEqualTo(newProduct.getPrice() * newProductDto.getQuantity());
         verify(customerRepository, atLeastOnce()).findById(1L);
         verify(cartRepository, atLeastOnce()).save(ArgumentMatchers.any(Cart.class));
         verify(productCartRepository, atLeastOnce()).save(ArgumentMatchers.any(ProductCart.class));

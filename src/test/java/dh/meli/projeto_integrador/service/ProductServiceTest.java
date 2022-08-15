@@ -2,6 +2,7 @@ package dh.meli.projeto_integrador.service;
 
 import dh.meli.projeto_integrador.dto.dtoOutput.ListProductByWarehouseDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.ProductOutputDto;
+import dh.meli.projeto_integrador.dto.dtoOutput.ProductStockDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.TotalProductByWarehouseDto;
 import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
 import dh.meli.projeto_integrador.model.Batch;
@@ -63,15 +64,14 @@ public class ProductServiceTest {
     }
 
     @Test
-    void findProduct_WhenProductDontExistsTest() throws Exception {
+    void findProduct_WhenProductDontExistsTest() {
         BDDMockito.when(productRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
         long id = 0;
 
-        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            Product product = productService.findProduct(id);
-        });
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () ->
+            productService.findProduct(id));
 
         assertThat(exception.getMessage()).isEqualTo(String.format("Could not find valid product for id %d", id));
 
@@ -95,9 +95,7 @@ public class ProductServiceTest {
         BDDMockito.when(productRepository.findAll())
                 .thenReturn(Generators.emptyProductDtoList());
 
-        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            productService.getAllProducts();
-        });
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> productService.getAllProducts());
 
         assertThat(exception.getMessage()).isEqualTo("No Products Found");
     }
@@ -119,11 +117,73 @@ public class ProductServiceTest {
         BDDMockito.when(productRepository.findAllByType(anyString()))
                 .thenReturn(Generators.emptyProductDtoList());
 
-        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            productService.getProductsByCategory(Generators.validProduct1().getType());
-        });
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () ->
+                productService.getProductsByCategory(Generators.validProduct1().getType()));
 
         assertThat(exception.getMessage()).isEqualTo("No Products Found");
+    }
+
+    @Test
+    void getProductBatchProps_returnProductStockDto_whenProductAndValidBatchExistsOrderByDueDate() {
+        BDDMockito.when(batchRepository.findBatchByProductId(anyLong()))
+                .thenReturn(Generators.validBatchList());
+
+        ProductStockDto productStockDto = productService.getProductBatchProps(1L, 'V');
+
+        assertThat(productStockDto.getBatchStockDto().get(0).getBatchNumber()).isEqualTo(1L);
+        assertThat(productStockDto.getBatchStockDto().get(1).getBatchNumber()).isEqualTo(2L);
+
+
+        verify(batchRepository, atLeastOnce()).findBatchByProductId(anyLong());
+    }
+
+    @Test
+    void getProductBatchProps_returnProductStockDto_whenProductAndValidBatchExistsOrderByQuantity() {
+        BDDMockito.when(batchRepository.findBatchByProductId(anyLong()))
+                .thenReturn(Generators.validBatchList());
+
+        ProductStockDto productStockDto = productService.getProductBatchProps(1L, 'Q');
+
+        assertThat(productStockDto.getBatchStockDto().get(0).getBatchNumber()).isEqualTo(2L);
+        assertThat(productStockDto.getBatchStockDto().get(1).getBatchNumber()).isEqualTo(1L);
+
+        verify(batchRepository, atLeastOnce()).findBatchByProductId(anyLong());
+    }
+
+    @Test
+    void getProductBatchProps_returnProductStockDto_whenProductAndValidBatchExistsOrderByBatch() {
+        BDDMockito.when(batchRepository.findBatchByProductId(anyLong()))
+                .thenReturn(Generators.validBatchList());
+
+        ProductStockDto productStockDto = productService.getProductBatchProps(1L, 'L');
+
+        assertThat(productStockDto.getBatchStockDto().get(0).getBatchNumber()).isEqualTo(1L);
+        assertThat(productStockDto.getBatchStockDto().get(1).getBatchNumber()).isEqualTo(2L);
+        verify(batchRepository, atLeastOnce()).findBatchByProductId(anyLong());
+    }
+
+    @Test
+    void getProductBatchProps_returnProductStockDto_whenBatchDontExist() {
+        BDDMockito.when(batchRepository.findBatchByProductId(anyLong()))
+                .thenReturn(Generators.emptyBatchList());
+
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                productService.getProductBatchProps(2L, 'Q'));
+
+        assertThat(exception.getMessage()).isEqualTo("No available batch found for this product.");
+        verify(batchRepository, atLeastOnce()).findBatchByProductId(anyLong());
+    }
+
+    @Test
+    void getProductBatchProps_returnProductStockDto_whenBatchInDueDateDontExist() {
+        BDDMockito.when(batchRepository.findBatchByProductId(anyLong()))
+                .thenReturn(Generators.notAbleBatchList());
+
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                productService.getProductBatchProps(2L, 'Q'));
+
+        assertThat(exception.getMessage()).isEqualTo("Product found, but no Batch of given product has 3 or more weeks until due date");
+        verify(batchRepository, atLeastOnce()).findBatchByProductId(anyLong());
     }
 
     @Test
@@ -157,8 +217,8 @@ public class ProductServiceTest {
     }
 
     @Test
-    void listProductByWarehouse_WhenBatchListIsEmptyTest() throws Exception {
-        List<Batch> batchList = new ArrayList<Batch>();
+    void listProductByWarehouse_WhenBatchListIsEmptyTest() {
+        List<Batch> batchList = new ArrayList<>();
         BDDMockito.when(batchRepository.findBatchByProductId(ArgumentMatchers.anyLong()))
                 .thenReturn(batchList);
 

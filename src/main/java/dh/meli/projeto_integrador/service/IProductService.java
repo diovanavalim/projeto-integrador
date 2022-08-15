@@ -1,5 +1,6 @@
 package dh.meli.projeto_integrador.service;
 
+import dh.meli.projeto_integrador.dto.dtoOutput.ProductStockDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.ProductOutputDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.ListProductByWarehouseDto;
 import dh.meli.projeto_integrador.model.Product;
@@ -31,6 +32,14 @@ public interface IProductService {
      * @return an object of type Product
      */
     Product findProduct(long id);
+
+     /**
+     * Method to find a product by id and return some properties about the batches
+     * @param id Long
+     * @param order Character
+     * @return an object of type ProductStockDto
+     */
+    ProductStockDto getProductBatchProps(Long id,Character order);
 
     /**
      * Method for to list all products by warehouse

@@ -207,7 +207,7 @@ public class OrderService implements IOrderService {
      * @param batchList: List of objects of type Batch. Iterable list
      * @param section an instance of Section. Section identifier
      */
-      static private void updateSectionProductLoadBeforeOrderDelete (List<Batch> batchList, Section section) {
+    static private void updateSectionProductLoadBeforeOrderDelete (List<Batch> batchList, Section section) {
         long currentProductLoad = section.getCurrentProductLoad();
         for (Batch batch : batchList) {
             currentProductLoad -= batch.getCurrentQuantity();
@@ -215,3 +215,4 @@ public class OrderService implements IOrderService {
         section.setCurrentProductLoad(currentProductLoad);
     }
 }
+

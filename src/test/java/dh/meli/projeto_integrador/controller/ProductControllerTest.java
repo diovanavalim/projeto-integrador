@@ -2,6 +2,7 @@ package dh.meli.projeto_integrador.controller;
 
 import dh.meli.projeto_integrador.dto.dtoOutput.ListProductByWarehouseDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.ProductOutputDto;
+import dh.meli.projeto_integrador.dto.dtoOutput.ProductStockDto;
 import dh.meli.projeto_integrador.service.ProductService;
 import dh.meli.projeto_integrador.util.Generators;
 import org.hamcrest.CoreMatchers;
@@ -25,10 +26,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.ArgumentMatchers.anyString;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.atLeastOnce;
@@ -103,5 +104,22 @@ class ProductControllerTest {
                 .isEqualTo(Generators.getListProductByWarehouseDto().getWarehouses().get(0).getWarehouseCode());
 
         verify(productService, atLeastOnce()).listProductByWarehouse(id);
+    }
+
+    @Test
+    void getProductBatches() throws Exception {
+        ProductStockDto productStockDto = Generators.getProductStockDtos();
+        BDDMockito.when(service.getProductBatchProps(anyLong(), anyChar()))
+                .thenReturn(productStockDto);
+
+        ResultActions response = mockMvc.perform(get("/api/v1/fresh-products/list/{id}",
+                Generators.getProduct().getId())
+                .contentType(MediaType.APPLICATION_JSON));
+        response.andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.batchStockDto.size()",
+                        CoreMatchers.is(productStockDto.getBatchStockDto().size())))
+                .andExpect(jsonPath("$.name",
+                        CoreMatchers.is(productStockDto.getName())));
     }
 }

@@ -1,6 +1,7 @@
 package dh.meli.projeto_integrador.controller;
 
 import dh.meli.projeto_integrador.dto.dtoOutput.ProductOutputDto;
+import dh.meli.projeto_integrador.dto.dtoOutput.ProductStockDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.ListProductByWarehouseDto;
 import dh.meli.projeto_integrador.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
  * Class responsible for intermediating the requests sent by the user with the responses provided by the Service;
- * @author Diovana Valim, Rafael Cavalcante
+ * @author Diovana Valim, Rafael Cavalcante, Amanda Marinelli e Thiago Almeida.
  * @version 0.0.1
  */
 @RestController
@@ -59,4 +61,19 @@ public class ProductController {
 
         return new ResponseEntity<ListProductByWarehouseDto>(listProductByWarehouseDto, HttpStatus.OK);
     }
+
+    /**
+     * Method to get the product batche's properties by id through the endpoint "/api/v1/fresh-products/fresh-products/list/{id}?order={order}
+     * if the user does not specified the order, the method uses the dueDate as default for the output
+     * @param  id (long type) received by url.
+     * @param order (character type) may be received by url, to order the API output.
+     * @return a list of properties for the specified product.
+     */
+    @GetMapping("/fresh-products/list/{id}")
+    public ResponseEntity<ProductStockDto> getProductBatches(@PathVariable long id,
+                                                             @RequestParam (required = false, defaultValue = "V") Character order) {
+        return ResponseEntity.ok(productService.getProductBatchProps(id, order));
+        
+    }
+
 }

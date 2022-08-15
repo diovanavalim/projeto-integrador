@@ -1,7 +1,6 @@
 package dh.meli.projeto_integrador.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dh.meli.projeto_integrador.enumClass.PurchaseOrderStatusEnum;
 import lombok.*;

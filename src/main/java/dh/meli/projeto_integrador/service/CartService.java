@@ -9,7 +9,6 @@ import dh.meli.projeto_integrador.dto.dtoOutput.TotalPriceDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.UpdateStatusDto;
 import dh.meli.projeto_integrador.enumClass.PurchaseOrderStatusEnum;
 import dh.meli.projeto_integrador.dto.dtoInput.CartDto;
-import dh.meli.projeto_integrador.dto.dtoOutput.TotalPriceDto;
 import dh.meli.projeto_integrador.exception.ForbiddenException;
 
 import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
@@ -22,7 +21,6 @@ import javax.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class responsible for business rules and communication with the Cart Repository layer
@@ -89,13 +87,15 @@ public class CartService implements ICartService {
         List<ProductDto> listValidProducts = new ArrayList<>();
 
         productsList.forEach(product -> {
-            Product productById = productRepository.findById(product.getProductId()).get();
-            Batch batchById = batchRepository.findByProduct(productById);
-                if (product.getQuantity() > batchById.getCurrentQuantity()) {
+            Product productById = productRepository.findById(product.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find valid product for id %d", product.getProductId())));
+            Integer totalQuantity = batchRepository.findTotalQuantityByProductId(productById.getId());
+
+                if (totalQuantity == null || product.getQuantity() > totalQuantity) {
                     listInvalidProducts.add(productById.getName());
                 }
 
-                if (product.getQuantity() <= batchById.getCurrentQuantity()) {
+                else if (product.getQuantity() <= totalQuantity) {
                     listValidProducts.add(product);
                 }
         });
@@ -105,7 +105,8 @@ public class CartService implements ICartService {
         }
 
         listValidProducts.forEach(product -> {
-            Product productById = productRepository.findById(product.getProductId()).get();
+            Product productById = productRepository.findById(product.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find valid product for id %d", product.getProductId())));
             ProductCart productCart = ProductCart.builder()
                     .cart(savedCart)
                     .product(productById)
@@ -124,9 +125,10 @@ public class CartService implements ICartService {
         TotalPriceDto total = new TotalPriceDto(0.0);
 
         productsList.forEach(product -> {
-            Product productById = productRepository.findById(product.getProductId()).get();
-            Batch batchById = batchRepository.findByProduct(productById);
-            total.setTotalPrice(batchById.getProduct().getPrice() + total.getTotalPrice());
+            Product productById = productRepository.findById(product.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart not found with this id"));
+
+            total.setTotalPrice(productById.getPrice() * product.getQuantity() + total.getTotalPrice());
         });
         return total;
     }

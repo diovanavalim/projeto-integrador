@@ -12,7 +12,7 @@ public class GenerateProduct {
                 .id(1)
                 .name("Morango")
                 .type("Fresco")
-                .price(4.99)
+                .price(5.0)
                 .build();
     }
 

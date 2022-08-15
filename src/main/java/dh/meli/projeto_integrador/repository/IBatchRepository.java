@@ -1,9 +1,9 @@
 package dh.meli.projeto_integrador.repository;
 
 import dh.meli.projeto_integrador.model.Batch;
-import dh.meli.projeto_integrador.model.Product;
 import org.springframework.data.jpa.repository.Query;
 import dh.meli.projeto_integrador.model.OrderEntry;
+import dh.meli.projeto_integrador.model.Product;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -59,4 +59,13 @@ public interface IBatchRepository extends CrudRepository<Batch, Long> {
 	@Query(value = "SELECT * FROM batch JOIN product ON product.id = batch.product_id WHERE product.type = ?1",
 			nativeQuery = true)
 	List<Batch> findBatchByProductType(String category);
+
+	/**
+	 * Method to sum current_quantity in all batches querying by associated product Id;
+	 * @param productId Long;
+	 * @return a quantity type Interger;
+	 */
+	@Query(value = "SELECT SUM(current_quantity) FROM batch WHERE product_id=?1",
+			nativeQuery = true)
+    Integer findTotalQuantityByProductId(Long productId);
 }
