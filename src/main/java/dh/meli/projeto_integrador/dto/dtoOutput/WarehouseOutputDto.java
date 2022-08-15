@@ -1,6 +1,5 @@
 package dh.meli.projeto_integrador.dto.dtoOutput;
 
-import dh.meli.projeto_integrador.dto.dtoInput.SectionDto;
 import dh.meli.projeto_integrador.model.Warehouse;
 import lombok.*;
 
@@ -41,7 +40,7 @@ public class WarehouseOutputDto {
 
     private List<AgentDto> agents;
 
-    private List<SectionDto> sections;
+    private List<SectionDtoOutput> sections;
 
     public WarehouseOutputDto(Warehouse warehouse) {
         this.id = warehouse.getId();
