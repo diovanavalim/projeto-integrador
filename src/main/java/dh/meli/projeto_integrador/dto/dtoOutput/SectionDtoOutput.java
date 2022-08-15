@@ -32,6 +32,8 @@ import lombok.*;
 public class SectionDtoOutput {
     private long id;
 
+    private long warehouseId;
+
     private String productType;
 
     private long maxProductLoad;
@@ -40,6 +42,7 @@ public class SectionDtoOutput {
 
     public SectionDtoOutput(Section section) {
         this.id = section.getId();
+        this.warehouseId = section.getWarehouse().getId();
         this.productType = section.getProductType();
         this.maxProductLoad = section.getMaxProductLoad();
         this.currentProductLoad = section.getCurrentProductLoad();
