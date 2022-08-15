@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * Class responsible for business rules and communication with the Section Repository layer;
  * @author Diovana Valim;
- * @version 0.0.1
+ * @version 0.0.3
  */
 @Service
 public class SectionService implements ISectionService {
@@ -27,6 +27,9 @@ public class SectionService implements ISectionService {
     @Autowired
     private ISectionRepository sectionRepository;
 
+    /**
+     * Dependency Injection of the WarehouseService;.
+     */
     @Autowired
     private WarehouseService warehouseService;
 

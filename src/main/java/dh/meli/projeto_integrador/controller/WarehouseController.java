@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Class responsible for processing user's requests and generating appropriated HTTP responses;
  * @author Diovana Valim
- * @version 0.0.1;
+ * @version 0.0.3;
  */
 @RestController
 @RequestMapping("/api/v1")

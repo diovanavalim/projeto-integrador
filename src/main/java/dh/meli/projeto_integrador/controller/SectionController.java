@@ -13,13 +13,26 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class responsible for processing user's requests and generating appropriated HTTP responses;
+ * @author Diovana Valim
+ * @version 0.0.3;
+ */
 @RestController
 @RequestMapping("/api/v1")
 public class SectionController {
 
+    /**
+     * Dependency Injection of the SectionService.
+     */
     @Autowired
     private SectionService sectionService;
 
+    /**
+     * A post method responsible for saving a new Section at application database's;
+     * @param sectionDto a valid CreateSectionDto instance received by the request body;
+     * @return Response Entity of type SectionDtoOutput and the corresponding HttpStatus;
+     */
     @PostMapping("/section")
     public ResponseEntity<SectionDtoOutput> createSection(@RequestBody @Valid CreateSectionDto sectionDto) {
         Section createdSection = sectionService.createSection(sectionDto);
@@ -27,6 +40,10 @@ public class SectionController {
         return new ResponseEntity<SectionDtoOutput>(new SectionDtoOutput(createdSection), HttpStatus.CREATED);
     }
 
+    /**
+     * A get method responsible for returning all sections at application database's;
+     * @return Response Entity of type List of SectionDtoOutput and the corresponding HttpStatus;
+     */
     @GetMapping("/section")
     public ResponseEntity<List<SectionDtoOutput>> getSections() {
         List<Section> sectionList = sectionService.getSections();
@@ -40,6 +57,11 @@ public class SectionController {
         return new ResponseEntity<List<SectionDtoOutput>>(sectionDtoOutputList, HttpStatus.OK);
     }
 
+    /**
+     * A get method responsible for returning a single Section by its ID;
+     * @param id section's identifier;
+     * @return Response Entity of type SectionDtoOutput and the corresponding HttpStatus;
+     */
     @GetMapping("/section/{id}")
     public ResponseEntity<SectionDtoOutput> getSection(@PathVariable long id) {
         Section section = sectionService.getSectionById(id);
