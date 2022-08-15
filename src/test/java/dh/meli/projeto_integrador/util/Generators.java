@@ -4,6 +4,7 @@ import dh.meli.projeto_integrador.dto.dtoInput.BatchDto;
 import dh.meli.projeto_integrador.dto.dtoInput.OrderEntryDto;
 import dh.meli.projeto_integrador.dto.dtoInput.SectionDto;
 
+import dh.meli.projeto_integrador.dto.dtoInput.WarehouseInputDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.*;
 import dh.meli.projeto_integrador.enumClass.PurchaseOrderStatusEnum;
 
@@ -248,6 +249,35 @@ public class Generators {
         Batch batch = createBatch();
 
         return batch.getOrderEntry().getSection().getWarehouse();
+    }
+
+    public static WarehouseInputDto getWarehouseInputDto() {
+        WarehouseInputDto warehouseInputDto = new WarehouseInputDto();
+
+        warehouseInputDto.setName("Armazém 01");
+        warehouseInputDto.setAddress("Rua Almeida 259");
+
+        return warehouseInputDto;
+    }
+
+    public static List<SectionDtoOutput> getSectionDtoOutputList() {
+        SectionDtoOutput sectionDtoOutput = new SectionDtoOutput(getSection());
+
+        List<SectionDtoOutput> sectionDtoOutputList = new ArrayList<SectionDtoOutput>();
+
+        sectionDtoOutputList.add(sectionDtoOutput);
+
+        return sectionDtoOutputList;
+    }
+
+    public static List<AgentDto> getAgentDtoOutputList() {
+        AgentDto agentDto = new AgentDto(getAgent());
+
+        List<AgentDto> agentList = new ArrayList<AgentDto>();
+
+        agentList.add(agentDto);
+
+        return agentList;
     }
 
     public static Section getSection() {
