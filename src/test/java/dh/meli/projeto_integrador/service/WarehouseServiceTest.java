@@ -3,6 +3,7 @@ package dh.meli.projeto_integrador.service;
 import dh.meli.projeto_integrador.dto.dtoInput.WarehouseInputDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.AgentDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.SectionDtoOutput;
+import dh.meli.projeto_integrador.exception.InternalServerErrorException;
 import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
 import dh.meli.projeto_integrador.model.Agent;
 import dh.meli.projeto_integrador.model.Section;
@@ -52,6 +53,18 @@ public class WarehouseServiceTest {
     }
 
     @Test
+    void createWarehouseTest_WhenDatabaseIsUnavailable() throws Exception {
+        BDDMockito.when(warehouseRepository.save(ArgumentMatchers.any(Warehouse.class)))
+                .thenThrow(InternalServerErrorException.class);
+
+        InternalServerErrorException exception = Assertions.assertThrows(InternalServerErrorException.class, () -> {
+            Warehouse warehouse = warehouseService.createWarehouse(Generators.getWarehouseInputDto());
+        });
+
+        verify(warehouseRepository, atLeastOnce()).save(ArgumentMatchers.any(Warehouse.class));
+    }
+
+    @Test
     void findWarehouseTest() {
         BDDMockito.when(warehouseRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(Generators.getWarehouse()));
@@ -64,6 +77,20 @@ public class WarehouseServiceTest {
         assertThat(warehouse.getName()).isEqualTo(Generators.getWarehouse().getName());
 
         verify(warehouseRepository, atLeastOnce()).findById(id);
+    }
+
+    @Test
+    void findWarehouseTest_WhenDatabaseIsUnavailable() throws Exception {
+        BDDMockito.when(warehouseRepository.findById(ArgumentMatchers.anyLong()))
+                .thenThrow(InternalServerErrorException.class);
+
+        long id = 1;
+
+        InternalServerErrorException exception = Assertions.assertThrows(InternalServerErrorException.class, () -> {
+            Warehouse warehouseList = warehouseService.findWarehouse(id);
+        });
+
+        verify(warehouseRepository, atLeastOnce()).findById(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -95,6 +122,17 @@ public class WarehouseServiceTest {
         assertThat(response.get(0).getName()).isEqualTo(Generators.getWarehouse().getName());
         assertThat(response.get(0).getAddress()).isEqualTo(Generators.getWarehouse().getAddress());
         assertThat(response.get(0).getId()).isEqualTo(Generators.getWarehouse().getId());
+
+        verify(warehouseRepository, atLeastOnce()).findAll();
+    }
+
+    @Test
+    void findWarehousesTest_WhenDatabaseIsUnavailable() throws Exception {
+        BDDMockito.when(warehouseRepository.findAll()).thenThrow(InternalServerErrorException.class);
+
+        InternalServerErrorException exception = Assertions.assertThrows(InternalServerErrorException.class, () -> {
+            List<Warehouse> warehouseList = warehouseService.findWarehouses();
+        });
 
         verify(warehouseRepository, atLeastOnce()).findAll();
     }
