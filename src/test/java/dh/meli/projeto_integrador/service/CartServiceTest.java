@@ -37,6 +37,7 @@ import org.mockito.quality.Strictness;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +69,7 @@ class CartServiceTest {
         Cart newCartWithId = GenerateCart.newCartWithId1();
         Customer newCustomer = GenerateCustomer.newCustomer1();
         Product newProduct = GenerateProduct.newProduct1();
-//        Batch newBatch = GenerateBatch.newBatch1();
+        Batch newBatch = GenerateBatch.newBatch1();
         ProductDto newProductDto = GenerateProduct.newProductDto();
         CartDto newCartDto = GenerateCart.newCartDto1();
         ProductCart newProductCart = GenerateProductCart.newProductCart1();
@@ -81,6 +82,10 @@ class CartServiceTest {
                 .thenReturn(Optional.of(newProduct));
         BDDMockito.when(batchRepository.findTotalQuantityByProductId(ArgumentMatchers.anyLong()))
                 .thenReturn(20);
+//        BDDMockito.when(batchRepository.findByProduct(ArgumentMatchers.any(Product.class)))
+//                .thenReturn(newBatch);
+        BDDMockito.when(batchRepository.findBatchByProductId(ArgumentMatchers.anyLong()))
+                .thenReturn(List.of(newBatch));
         BDDMockito.when(productCartRepository.save(ArgumentMatchers.any(ProductCart.class)))
                 .thenReturn(newProductCart);
 
@@ -107,14 +112,15 @@ class CartServiceTest {
                 .thenReturn(newCartWithId);
         BDDMockito.when(productRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(newProduct));
-        BDDMockito.when(batchRepository.findByProduct(ArgumentMatchers.any(Product.class)))
-                .thenReturn(newBatch);
-
+//        BDDMockito.when(batchRepository.findByProduct(ArgumentMatchers.any(Product.class)))
+//                .thenReturn(newBatch);
+        BDDMockito.when(batchRepository.findBatchByProductId(ArgumentMatchers.anyLong()))
+                .thenReturn(List.of(newBatch));
         ForbiddenException exception = assertThrows(ForbiddenException.class, () -> {
             cartService.createCart(cartDto);
         });
 
-        assertThat(exception.getMessage()).isEqualTo("The product: [Morango] does not have enough quantity in stock.");
+        assertThat(exception.getMessage()).isEqualTo("The product(s): [Morango] does not have enough quantity in stock or due date is not valid.");
         verify(cartRepository, never()).save(GenerateCart.newCart1());
     }
 

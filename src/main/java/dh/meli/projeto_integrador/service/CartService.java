@@ -19,8 +19,12 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Class responsible for business rules and communication with the Cart Repository layer
@@ -91,7 +95,11 @@ public class CartService implements ICartService {
                     .orElseThrow(() -> new ResourceNotFoundException(String.format("Could not find valid product for id %d", product.getProductId())));
             Integer totalQuantity = batchRepository.findTotalQuantityByProductId(productById.getId());
 
-                if (totalQuantity == null || product.getQuantity() > totalQuantity) {
+            List<Batch> batchById = batchRepository.findBatchByProductId(productById.getId());
+
+            List<Batch> invalidDueDate = filterByDueDate(batchById);
+
+                if (totalQuantity == null || invalidDueDate.size() >= 1 || product.getQuantity() > totalQuantity) {
                     listInvalidProducts.add(productById.getName());
                 }
 
@@ -101,7 +109,7 @@ public class CartService implements ICartService {
         });
 
         if (listInvalidProducts.size() >= 1) {
-            throw new ForbiddenException(String.format("The product: %s does not have enough quantity in stock.", listInvalidProducts));
+            throw new ForbiddenException(String.format("The product(s): %s does not have enough quantity in stock or due date is not valid.", listInvalidProducts));
         }
 
         listValidProducts.forEach(product -> {
@@ -229,5 +237,16 @@ public class CartService implements ICartService {
      */
     private Cart findCartIfExists(Long id) {
         return cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart not found with this id"));
+    }
+
+    /**
+     * Method to filter a list of batches to contain only batches that have 3 or more weeks until their due date;
+     * @param batchList a  List of Batch to be filtered.
+     * @return a filtered list of batches;
+     */
+    private static List<Batch> filterByDueDate(List<Batch> batchList) {
+        return batchList.stream()
+                .filter(batch -> DAYS.between(LocalDate.now(), batch.getDueDate()) < 21)
+                .collect(Collectors.toList());
     }
 }
