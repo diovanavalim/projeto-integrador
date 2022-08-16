@@ -90,7 +90,6 @@ public class OrderEntryIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderEntryDto)));
 
-
         response.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.size()",
                         CoreMatchers.is(1)))
