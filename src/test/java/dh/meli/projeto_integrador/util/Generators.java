@@ -1,10 +1,8 @@
 package dh.meli.projeto_integrador.util;
 
-import dh.meli.projeto_integrador.dto.dtoInput.BatchDto;
-import dh.meli.projeto_integrador.dto.dtoInput.OrderEntryDto;
-import dh.meli.projeto_integrador.dto.dtoInput.SectionDto;
+import dh.meli.projeto_integrador.dto.dtoInput.*;
 
-import dh.meli.projeto_integrador.dto.dtoInput.WarehouseInputDto;
+import dh.meli.projeto_integrador.dto.dtoInput.BatchDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.*;
 import dh.meli.projeto_integrador.enumClass.PurchaseOrderStatusEnum;
 
@@ -296,6 +294,15 @@ public class Generators {
         section.setOrderEntries(orderEntries);
 
         return batch.getOrderEntry().getSection();
+    }
+
+    public static CreateSectionDto getCreateSectionDto() {
+        Batch batch = createBatch();
+
+        Section section = batch.getOrderEntry().getSection();
+
+        return new CreateSectionDto(section.getWarehouse().getId(), section.getProductType(),
+                section.getMaxProductLoad());
     }
 
     public static Section getUnavailableSection() {

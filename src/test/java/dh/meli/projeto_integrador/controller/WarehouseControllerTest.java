@@ -17,6 +17,9 @@ import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -66,6 +69,32 @@ public class WarehouseControllerTest {
         assertThat(response.getBody().getAddress()).isEqualTo(Generators.getWarehouse().getAddress());
 
         verify(warehouseService, atLeastOnce()).findWarehouse(ArgumentMatchers.anyLong());
+        verify(warehouseService, atLeastOnce()).setWarehouseAgents(ArgumentMatchers.any(Warehouse.class));
+        verify(warehouseService, atLeastOnce()).setWarehouseSections(ArgumentMatchers.any(Warehouse.class));
+    }
+
+    @Test
+    void getWarehousesTest() {
+        List<Warehouse> warehouseList = new ArrayList<Warehouse>();
+
+        warehouseList.add(Generators.getWarehouse());
+
+        BDDMockito.when(warehouseService.findWarehouses())
+                .thenReturn(warehouseList);
+        BDDMockito.when(warehouseService.setWarehouseSections(ArgumentMatchers.any(Warehouse.class)))
+                .thenReturn(Generators.getSectionDtoOutputList());
+        BDDMockito.when(warehouseService.setWarehouseAgents(ArgumentMatchers.any(Warehouse.class)))
+                .thenReturn(Generators.getAgentDtoOutputList());
+
+        ResponseEntity<List<WarehouseOutputDto>> response = warehouseController.getWarehouses();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().get(0).getAddress()).isEqualTo(Generators.getWarehouse().getAddress());
+        assertThat(response.getBody().get(0).getName()).isEqualTo(Generators.getWarehouse().getName());
+        assertThat(response.getBody().get(0).getId()).isEqualTo(Generators.getWarehouse().getId());
+
+        verify(warehouseService, atLeastOnce()).findWarehouses();
         verify(warehouseService, atLeastOnce()).setWarehouseAgents(ArgumentMatchers.any(Warehouse.class));
         verify(warehouseService, atLeastOnce()).setWarehouseSections(ArgumentMatchers.any(Warehouse.class));
     }
