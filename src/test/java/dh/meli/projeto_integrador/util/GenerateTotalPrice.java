@@ -1,4 +1,4 @@
-package dh.meli.projeto_integrador.utils;
+package dh.meli.projeto_integrador.util;
 
 import dh.meli.projeto_integrador.dto.dtoOutput.TotalPriceDto;
 

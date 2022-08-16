@@ -1,4 +1,4 @@
-package dh.meli.projeto_integrador.utils;
+package dh.meli.projeto_integrador.util;
 
 import dh.meli.projeto_integrador.dto.dtoInput.ProductDto;
 import dh.meli.projeto_integrador.model.Product;

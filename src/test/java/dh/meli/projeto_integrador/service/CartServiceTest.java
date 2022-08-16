@@ -12,16 +12,13 @@ import dh.meli.projeto_integrador.model.Customer;
 import dh.meli.projeto_integrador.repository.ICartRepository;
 import dh.meli.projeto_integrador.repository.ICustomerRepository;
 import dh.meli.projeto_integrador.repository.IProductRepository;
-import dh.meli.projeto_integrador.util.Generators;
-import dh.meli.projeto_integrador.utils.GenerateCart;
-import dh.meli.projeto_integrador.utils.GenerateCustomer;
+import dh.meli.projeto_integrador.util.*;
 
 
 import dh.meli.projeto_integrador.dto.dtoOutput.TotalPriceDto;
 import dh.meli.projeto_integrador.exception.ForbiddenException;
 import dh.meli.projeto_integrador.model.*;
 import dh.meli.projeto_integrador.repository.*;
-import dh.meli.projeto_integrador.utils.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

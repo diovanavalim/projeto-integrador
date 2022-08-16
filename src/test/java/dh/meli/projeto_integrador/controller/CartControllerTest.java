@@ -1,6 +1,5 @@
 package dh.meli.projeto_integrador.controller;
 
-
 import dh.meli.projeto_integrador.service.CartService;
 import dh.meli.projeto_integrador.util.Generators;
 import org.hamcrest.CoreMatchers;
@@ -18,10 +17,10 @@ import dh.meli.projeto_integrador.dto.dtoOutput.TotalPriceDto;
 import dh.meli.projeto_integrador.dto.dtoOutput.UpdateStatusDto;
 import dh.meli.projeto_integrador.exception.ForbiddenException;
 import dh.meli.projeto_integrador.model.Cart;
-import dh.meli.projeto_integrador.utils.GenerateCart;
-import dh.meli.projeto_integrador.utils.GenerateCartDto;
-import dh.meli.projeto_integrador.utils.GenerateTotalPrice;
-import dh.meli.projeto_integrador.utils.GenerateUpdateStatusDto;
+import dh.meli.projeto_integrador.util.GenerateCart;
+import dh.meli.projeto_integrador.util.GenerateCartDto;
+import dh.meli.projeto_integrador.util.GenerateTotalPrice;
+import dh.meli.projeto_integrador.util.GenerateUpdateStatusDto;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
