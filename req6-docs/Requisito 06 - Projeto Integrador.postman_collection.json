@@ -1,0 +1,155 @@
+{
+	"info": {
+		"_postman_id": "b19e988a-e0c3-4572-8447-f828cd63c310",
+		"name": "Requisito 06 - Projeto Integrador",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Warehouse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Armazém B\",\n    \"address\": \"Rua Botanica 468\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/warehouse",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"warehouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Warehouse",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/warehouse/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"warehouse",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Warehouses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/warehouse",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"warehouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Section",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"warehouseId\": 1,\n    \"productType\": \"Refrigerado\",\n    \"maxProductLoad\": 2000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/section",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"section"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Sections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/section",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"section"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Section",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/section/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"section",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
