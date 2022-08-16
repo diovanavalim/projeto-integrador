@@ -1,6 +1,7 @@
 package dh.meli.projeto_integrador.service;
 
 import dh.meli.projeto_integrador.dto.dtoInput.CreateSectionDto;
+import dh.meli.projeto_integrador.exception.InternalServerErrorException;
 import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
 import dh.meli.projeto_integrador.model.Section;
 import dh.meli.projeto_integrador.repository.ISectionRepository;
@@ -75,6 +76,20 @@ public class SectionServiceTest {
     }
 
     @Test
+    void getSectionById_WhenDatabaseIsUnavailable() throws Exception {
+        BDDMockito.when(sectionRepository.findById(ArgumentMatchers.anyLong()))
+                .thenThrow(InternalServerErrorException.class);
+
+        long id = 1;
+
+        InternalServerErrorException exception = Assertions.assertThrows(InternalServerErrorException.class, () -> {
+            Section section = sectionService.getSectionById(id);
+        });
+
+        verify(sectionRepository, atLeastOnce()).findById(ArgumentMatchers.anyLong());
+    }
+
+    @Test
     void getSectionsTest() {
         List<Section> sectionList = new ArrayList<Section>();
 
@@ -92,6 +107,17 @@ public class SectionServiceTest {
     }
 
     @Test
+    void getSectionsTest_WhenDatabaseIsUnavailable() throws Exception {
+        BDDMockito.when(sectionRepository.findAll()).thenThrow(InternalServerErrorException.class);
+
+        InternalServerErrorException exception = Assertions.assertThrows(InternalServerErrorException.class, () -> {
+           List<Section> sectionList = sectionService.getSections();
+        });
+
+        verify(sectionRepository, atLeastOnce()).findAll();
+    }
+
+    @Test
     void saveSectionTest() {
         Section section = Generators.getSection();
         Section responseSection = sectionService.saveSection(section);
@@ -101,6 +127,18 @@ public class SectionServiceTest {
         assertThat(responseSection.getProductType()).isEqualTo(section.getProductType());
 
         verify(sectionRepository, atLeastOnce()).save(section);
+    }
+
+    @Test
+    void saveSectionTest_WhenDatabaseIsUnavailable() throws Exception {
+        BDDMockito.when(sectionRepository.save(ArgumentMatchers.any(Section.class)))
+                .thenThrow(InternalServerErrorException.class);
+
+        InternalServerErrorException exception = Assertions.assertThrows(InternalServerErrorException.class, () -> {
+            Section section = sectionService.saveSection(Generators.getSection());
+        });
+
+        verify(sectionRepository, atLeastOnce()).save(ArgumentMatchers.any(Section.class));
     }
 
     @Test
