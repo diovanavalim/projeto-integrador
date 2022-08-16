@@ -54,7 +54,13 @@ public class WarehouseService implements IWarehouseService {
      */
     @Override
     public Warehouse findWarehouse(long id) {
-        Optional<Warehouse> warehouse = warehouseRepository.findById(id);
+        Optional<Warehouse> warehouse;
+
+        try {
+            warehouse = warehouseRepository.findById(id);
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
 
         if (warehouse.isEmpty()) {
             throw new ResourceNotFoundException(String.format("Could not find valid warehouse for id %d", id));
