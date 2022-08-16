@@ -1,5 +1,6 @@
 package dh.meli.projeto_integrador.service;
 
+import dh.meli.projeto_integrador.dto.dtoInput.CreateSectionDto;
 import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
 import dh.meli.projeto_integrador.model.Section;
 import dh.meli.projeto_integrador.repository.ISectionRepository;
@@ -16,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +34,9 @@ public class SectionServiceTest {
 
     @Mock
     ISectionRepository sectionRepository;
+
+    @Mock
+    WarehouseService warehouseService;
 
     @BeforeEach
     void setup() {
@@ -69,6 +75,23 @@ public class SectionServiceTest {
     }
 
     @Test
+    void getSectionsTest() {
+        List<Section> sectionList = new ArrayList<Section>();
+
+        sectionList.add(Generators.getSection());
+
+        BDDMockito.when(sectionRepository.findAll()).thenReturn(sectionList);
+
+        List<Section> response = sectionService.getSections();
+
+        assertThat(response.get(0).getMaxProductLoad()).isEqualTo(sectionList.get(0).getMaxProductLoad());
+        assertThat(response.get(0).getProductType()).isEqualTo(sectionList.get(0).getProductType());
+        assertThat(response.get(0).getWarehouse().getId()).isEqualTo(sectionList.get(0).getWarehouse().getId());
+
+        verify(sectionRepository, atLeastOnce()).findAll();
+    }
+
+    @Test
     void saveSectionTest() {
         Section section = Generators.getSection();
         Section responseSection = sectionService.saveSection(section);
@@ -78,5 +101,22 @@ public class SectionServiceTest {
         assertThat(responseSection.getProductType()).isEqualTo(section.getProductType());
 
         verify(sectionRepository, atLeastOnce()).save(section);
+    }
+
+    @Test
+    void createSectionTest() {
+        BDDMockito.when(warehouseService.findWarehouse(ArgumentMatchers.anyLong()))
+                .thenReturn(Generators.getSection().getWarehouse());
+
+        Section section = Generators.getSection();
+
+        CreateSectionDto sectionDto = new CreateSectionDto(section.getWarehouse().getId(),
+                section.getProductType(), section.getMaxProductLoad());
+
+        Section response = sectionService.createSection(sectionDto);
+
+        assertThat(response.getProductType()).isEqualTo(sectionDto.getProductType());
+        assertThat(response.getMaxProductLoad()).isEqualTo(sectionDto.getMaxProductLoad());
+        assertThat(response.getWarehouse().getId()).isEqualTo(sectionDto.getWarehouseId());
     }
 }

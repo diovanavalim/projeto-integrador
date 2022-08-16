@@ -1,11 +1,15 @@
 package dh.meli.projeto_integrador.service;
 
+import dh.meli.projeto_integrador.dto.dtoInput.WarehouseInputDto;
+import dh.meli.projeto_integrador.dto.dtoOutput.AgentDto;
+import dh.meli.projeto_integrador.dto.dtoOutput.SectionDtoOutput;
 import dh.meli.projeto_integrador.exception.ResourceNotFoundException;
+import dh.meli.projeto_integrador.model.Agent;
+import dh.meli.projeto_integrador.model.Section;
 import dh.meli.projeto_integrador.model.Warehouse;
 import dh.meli.projeto_integrador.repository.IWarehouseRepository;
 import dh.meli.projeto_integrador.util.Generators;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -16,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.atLeastOnce;
@@ -32,14 +36,26 @@ public class WarehouseServiceTest {
     @Mock
     IWarehouseRepository warehouseRepository;
 
-    @BeforeEach
-    void setup() {
-        BDDMockito.when(warehouseRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(Generators.getWarehouse()));
+    @Test
+    void createWarehouseTest() {
+        BDDMockito.when(warehouseRepository.save(ArgumentMatchers.any(Warehouse.class)))
+                .thenReturn(Generators.getWarehouse());
+
+        WarehouseInputDto warehouseInputDto = new WarehouseInputDto(Generators.getWarehouse().getName(),
+                Generators.getWarehouse().getAddress());
+
+        Warehouse warehouse = warehouseService.createWarehouse(warehouseInputDto);
+
+        assertThat(warehouse.getAddress()).isEqualTo(warehouseInputDto.getAddress());
+        assertThat(warehouse.getName()).isEqualTo(warehouseInputDto.getName());
+        assertThat(warehouse.getId()).isEqualTo(Generators.getWarehouse().getId());
     }
 
     @Test
     void findWarehouseTest() {
+        BDDMockito.when(warehouseRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(Generators.getWarehouse()));
+
         long id = 0;
         Warehouse warehouse = warehouseService.findWarehouse(id);
 
@@ -64,5 +80,52 @@ public class WarehouseServiceTest {
         assertThat(exception.getMessage()).isEqualTo(String.format("Could not find valid warehouse for id %d", id));
 
         verify(warehouseRepository, atLeastOnce()).findById(id);
+    }
+
+    @Test
+    void findWarehousesTest() {
+        List<Warehouse> warehouseList = new ArrayList<Warehouse>();
+
+        warehouseList.add(Generators.getWarehouse());
+
+        BDDMockito.when(warehouseRepository.findAll()).thenReturn(warehouseList);
+
+        List<Warehouse> response = warehouseService.findWarehouses();
+
+        assertThat(response.get(0).getName()).isEqualTo(Generators.getWarehouse().getName());
+        assertThat(response.get(0).getAddress()).isEqualTo(Generators.getWarehouse().getAddress());
+        assertThat(response.get(0).getId()).isEqualTo(Generators.getWarehouse().getId());
+
+        verify(warehouseRepository, atLeastOnce()).findAll();
+    }
+
+    @Test
+    void setWarehouseSectionsTest() {
+        List<SectionDtoOutput> sectionDtoOutputList = warehouseService.setWarehouseSections(Generators.getWarehouse());
+
+        ArrayList<Section> sectionList = new ArrayList<Section>(Generators.getWarehouse().getSections());
+
+        assertThat(sectionDtoOutputList.get(0).getProductType()).isEqualTo(sectionList.get(0).getProductType());
+        assertThat(sectionDtoOutputList.get(0).getMaxProductLoad()).isEqualTo(sectionList.get(0).getMaxProductLoad());
+        assertThat(sectionDtoOutputList.get(0).getWarehouseId()).isEqualTo(sectionList.get(0).getWarehouse().getId());
+    }
+
+    @Test
+    void setWarehouseAgentsTest() {
+        Agent agent = Generators.getAgent();
+
+        Set<Agent> agentSet = new HashSet<Agent>();
+
+        agentSet.add(agent);
+
+        Warehouse warehouse = Generators.getWarehouse();
+
+        warehouse.setAgents(agentSet);
+
+        List<AgentDto> agentDtoList = warehouseService.setWarehouseAgents(warehouse);
+
+        assertThat(agentDtoList.get(0).getName()).isEqualTo(agent.getName());
+        assertThat(agentDtoList.get(0).getEmailAddress()).isEqualTo(agent.getEmailAddress());
+        assertThat(agentDtoList.get(0).getPhoneNumber()).isEqualTo(agent.getPhoneNumber());
     }
 }
